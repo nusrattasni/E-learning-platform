@@ -1,11 +1,22 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import CourseCardSkeleton from '@/Components/CourseCardSkeleton';
 
 export default function CourseCatalog({ auth, courses, filters }) {
     const [search, setSearch] = useState(filters?.search || '');
     const [category, setCategory] = useState(filters?.category || filters?.category_id || '');
     const [level, setLevel] = useState(filters?.level || '');
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Simulate lazy loading when filters change
+    useEffect(() => {
+        setIsLoading(true);
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 800); // 800ms skeleton display
+        return () => clearTimeout(timer);
+    }, [search, category, level]);
 
     // For MVP demonstration, if courses.data is empty, we show premium mock data
     const mockCourses = [
@@ -185,7 +196,9 @@ export default function CourseCatalog({ auth, courses, filters }) {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {displayCourses.length === 0 ? (
+                        {isLoading ? (
+                            [...Array(6)].map((_, i) => <CourseCardSkeleton key={`skeleton-${i}`} />)
+                        ) : displayCourses.length === 0 ? (
                             <div className="col-span-full py-12 text-center bg-white rounded-xl border border-gray-200 border-dashed">
                                 <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

@@ -1,177 +1,234 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
+import { 
+    Trophy, Flame, Target, BookOpen, Clock, Award, 
+    CalendarDays, Star, TrendingUp, PlayCircle
+} from 'lucide-react';
 
-export default function Dashboard({ auth, userBadges = [], allBadges = [] }) {
+export default function Dashboard({ 
+    auth, userBadges = [], allBadges = [], leaderboardPosition, 
+    recommendedCourses = [], recentCertificates = [], weeklyProgress = [] 
+}) {
+    const user = auth.user;
+
+    // Helper for calendar dots (mocking active days)
+    const calendarDays = Array.from({ length: 30 }, (_, i) => ({
+        day: i + 1,
+        active: Math.random() > 0.6 // Randomly mock active days
+    }));
+
     return (
         <AuthenticatedLayout
-            user={auth.user}
+            user={user}
             header={
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h2 className="font-semibold text-2xl text-gray-900 tracking-tight">Welcome back, {auth.user.name}</h2>
-                        <p className="text-gray-500 text-sm mt-1">Ready to continue your learning journey?</p>
+                        <h2 className="font-semibold text-3xl text-slate-900 tracking-tight">Welcome back, {user.name}! 👋</h2>
+                        <p className="text-slate-500 mt-1">Let's continue your learning journey.</p>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <Link href={route('courses.index')} className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-semibold shadow-md shadow-indigo-600/20 transition-all hover:-translate-y-0.5 whitespace-nowrap">
-                            Browse All Courses
-                        </Link>
-                        <div className="relative hidden md:block">
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                            </span>
-                            <input type="text" placeholder="Search your courses..." className="pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all w-full md:w-64 shadow-sm" />
-                        </div>
-                    </div>
+                    <Link href={route('courses.index')} className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold shadow-md shadow-indigo-600/20 transition-all hover:-translate-y-0.5 whitespace-nowrap">
+                        Browse Courses
+                    </Link>
                 </div>
             }
         >
-            <Head title="Dashboard" />
+            <Head title="Student Dashboard" />
 
-            <div className="py-8">
+            <div className="py-8 bg-slate-50 min-h-screen">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
                     
-                    {/* Top Stats Overview */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {[
-                            { label: 'Courses in Progress', value: '2', route: 'my-courses' },
-                            { label: 'Completed Courses', value: '0', route: 'my-courses' },
-                            { label: 'Learning Hours', value: '14.5', route: 'dashboard' },
-                            { label: 'Certificates', value: '0', route: 'certificates' },
-                        ].map((stat, i) => (
-                            <Link key={i} href={route(stat.route)} className="block bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all group cursor-pointer">
-                                <p className="text-gray-500 text-xs font-medium uppercase tracking-wider mb-1 group-hover:text-indigo-600 transition-colors">{stat.label}</p>
-                                <p className="text-2xl font-semibold text-gray-900 group-hover:text-indigo-700 transition-colors">{stat.value}</p>
-                            </Link>
-                        ))}
+                    {/* Top Hero Stats (Streak, Leaderboard, Goal) */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* Daily Streak */}
+                        <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl p-6 text-white shadow-lg shadow-orange-500/20 relative overflow-hidden group hover:-translate-y-1 transition-all">
+                            <Flame className="absolute -right-6 -top-6 w-32 h-32 text-white/10 group-hover:scale-110 transition-transform" />
+                            <div className="relative z-10">
+                                <p className="text-orange-100 font-bold uppercase tracking-wider text-xs mb-1">Daily Streak</p>
+                                <div className="flex items-end gap-2">
+                                    <h3 className="text-5xl font-black">{user.streak_count || 0}</h3>
+                                    <span className="text-orange-100 font-medium mb-1">Days</span>
+                                </div>
+                                <p className="text-sm text-orange-50 mt-4">Keep it up! Log in tomorrow to maintain your streak.</p>
+                            </div>
+                        </div>
+
+                        {/* Leaderboard Position */}
+                        <div className="bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-indigo-600/20 relative overflow-hidden group hover:-translate-y-1 transition-all">
+                            <Trophy className="absolute -right-6 -top-6 w-32 h-32 text-white/10 group-hover:scale-110 transition-transform" />
+                            <div className="relative z-10">
+                                <p className="text-indigo-100 font-bold uppercase tracking-wider text-xs mb-1">Leaderboard Rank</p>
+                                <div className="flex items-end gap-2">
+                                    <h3 className="text-5xl font-black">#{leaderboardPosition || 1}</h3>
+                                </div>
+                                <p className="text-sm text-indigo-50 mt-4">Top 10% of learners this week. Excellent work!</p>
+                            </div>
+                        </div>
+
+                        {/* Today's Goal */}
+                        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all relative overflow-hidden">
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <p className="text-slate-500 font-bold uppercase tracking-wider text-xs mb-1 flex items-center gap-2">
+                                        <Target className="w-4 h-4 text-emerald-500" /> Today's Goal
+                                    </p>
+                                    <h3 className="text-xl font-bold text-slate-900 mt-2">Complete 1 Lesson</h3>
+                                </div>
+                                <div className="w-16 h-16 rounded-full border-4 border-slate-100 flex items-center justify-center relative">
+                                    <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+                                        <circle cx="30" cy="30" r="26" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-slate-100" />
+                                        <circle cx="30" cy="30" r="26" stroke="currentColor" strokeWidth="4" fill="transparent" strokeDasharray={26 * 2 * Math.PI} strokeDashoffset={26 * 2 * Math.PI * (1 - 0.5)} className="text-emerald-500" />
+                                    </svg>
+                                    <span className="font-bold text-slate-700 text-sm">50%</span>
+                                </div>
+                            </div>
+                            <p className="text-sm text-slate-500 mt-4">You are halfway there! Watch one more video.</p>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Main Column */}
+                        {/* Main Left Column */}
                         <div className="lg:col-span-2 space-y-8">
                             
-                            {/* Continue Learning Section */}
-                            <section>
-                                <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-lg font-medium text-gray-900">Continue Learning</h3>
-                                </div>
-                                
-                                <div className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden hover:border-indigo-200 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col sm:flex-row group cursor-pointer">
-                                    <div className="sm:w-1/3 relative h-48 sm:h-auto bg-gray-100">
-                                        <img src="/images/course-1.png" alt="React Course" className="absolute inset-0 w-full h-full object-cover" />
-                                    </div>
-                                    <div className="p-6 sm:w-2/3 flex flex-col justify-center relative">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <span className="px-2.5 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">Web Development</span>
-                                        </div>
-                                        <h4 className="text-xl font-semibold text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors pr-16">Advanced React Patterns</h4>
-                                        <p className="text-sm text-gray-500 mb-4 line-clamp-2 pr-16">Master compound components, render props, and custom hooks to build scalable applications.</p>
-                                        
-                                        <div className="text-xs text-gray-500">
-                                            <span className="font-medium text-indigo-600">Up next:</span> Lesson 4: Custom Hooks
-                                        </div>
-                                        
-                                        {/* Circular Progress Ring */}
-                                        <div className="absolute top-6 right-6 w-14 h-14">
-                                            <svg className="w-14 h-14 transform -rotate-90">
-                                                <circle cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-gray-100" />
-                                                <circle cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="transparent" strokeDasharray={24 * 2 * Math.PI} strokeDashoffset={24 * 2 * Math.PI * (1 - 0.65)} className="text-indigo-600 drop-shadow-sm transition-all duration-1000 ease-out" />
-                                            </svg>
-                                            <div className="absolute inset-0 flex items-center justify-center flex-col">
-                                                <span className="text-xs font-bold text-gray-900 leading-none">65%</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-
-                            {/* Recent Activity Feed */}
-                            <section>
-                                <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
-                                <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-5">
-                                    <div className="relative border-l border-gray-200 ml-3 space-y-6">
-                                        
-                                        <div className="relative pl-6">
-                                            <span className="absolute -left-1.5 top-1 w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-white"></span>
-                                            <p className="text-sm font-medium text-gray-900">Completed "Variables in JavaScript"</p>
-                                            <p className="text-xs text-gray-500 mt-0.5">2 hours ago in <span className="text-indigo-600 cursor-pointer hover:underline">Modern JavaScript From The Beginning</span></p>
-                                        </div>
-
-                                        <div className="relative pl-6">
-                                            <span className="absolute -left-1.5 top-1 w-3 h-3 rounded-full bg-yellow-400 ring-4 ring-white"></span>
-                                            <p className="text-sm font-medium text-gray-900">Earned 50 XP</p>
-                                            <p className="text-xs text-gray-500 mt-0.5">3 hours ago for a 3-day coding streak.</p>
-                                        </div>
-
-                                        <div className="relative pl-6">
-                                            <span className="absolute -left-1.5 top-1 w-3 h-3 rounded-full bg-indigo-500 ring-4 ring-white"></span>
-                                            <p className="text-sm font-medium text-gray-900">Started React Course</p>
-                                            <p className="text-xs text-gray-500 mt-0.5">Yesterday</p>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </section>
-
-                            {/* Achievements & Badges */}
-                            <section>
-                                <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-lg font-medium text-gray-900">Achievements & Badges</h3>
-                                </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                    {allBadges.map((badge) => {
-                                        const isEarned = userBadges.some(ub => ub.id === badge.id);
-                                        return (
-                                            <div key={badge.id} className={`flex flex-col items-center justify-center p-4 rounded-xl border text-center transition-all ${isEarned ? 'bg-white border-emerald-200 shadow-sm shadow-emerald-100 hover:-translate-y-1' : 'bg-gray-50 border-gray-200 opacity-60 grayscale'}`}>
-                                                <div className={`w-14 h-14 rounded-full flex items-center justify-center text-3xl mb-3 shadow-inner ${isEarned ? 'bg-gradient-to-br from-emerald-100 to-emerald-200' : 'bg-gray-200'}`}>
-                                                    {badge.icon || '🏅'}
-                                                </div>
-                                                <h4 className={`text-sm font-bold ${isEarned ? 'text-gray-900' : 'text-gray-500'}`}>{badge.name}</h4>
-                                                <p className="text-xs text-gray-500 mt-1 line-clamp-2">{badge.description}</p>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </section>
-                        </div>
-
-                        {/* Sidebar */}
-                        <div className="space-y-8">
-                            <section>
-                                <h3 className="text-lg font-medium text-gray-900 mb-4">Recommended for you</h3>
-                                <div className="space-y-4">
-                                    {[
-                                        { title: 'Fullstack Next.js Bootcamp', author: 'Sarah Drasner', img: 'https://images.unsplash.com/photo-1618477388954-7852f32655ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80', students: '1.2k' },
-                                        { title: 'Python for Data Science', author: 'Wes McKinney', img: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80', students: '3.4k' }
-                                    ].map((course, i) => (
-                                        <div key={i} className="flex gap-4 group cursor-pointer bg-white border border-gray-200 shadow-sm rounded-xl p-3 hover:border-gray-300 transition-colors">
-                                            <div className="w-20 h-16 rounded-lg overflow-hidden shrink-0 bg-gray-100">
-                                                <img src={course.img} alt={course.title} className="w-full h-full object-cover" />
-                                            </div>
-                                            <div className="flex flex-col justify-center">
-                                                <h4 className="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">{course.title}</h4>
-                                                <p className="text-xs text-gray-500 mt-0.5">{course.author}</p>
-                                                <div className="flex items-center gap-1 mt-1 text-xs text-gray-500 font-medium">
-                                                    <svg className="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
-                                                    {course.students} students
+                            {/* Weekly Progress */}
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                                <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+                                    <TrendingUp className="w-5 h-5 text-indigo-500" /> Weekly Progress (XP)
+                                </h3>
+                                <div className="flex items-end justify-between h-40 gap-2">
+                                    {weeklyProgress.map((day, i) => (
+                                        <div key={i} className="flex flex-col items-center flex-1 group">
+                                            <div className="w-full relative flex justify-center h-32 items-end">
+                                                <div 
+                                                    className="w-full max-w-[40px] bg-indigo-100 rounded-t-lg group-hover:bg-indigo-500 transition-colors duration-300 relative"
+                                                    style={{ height: `${Math.max(10, (day.xp / 200) * 100)}%` }}
+                                                >
+                                                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        {day.xp}XP
+                                                    </span>
                                                 </div>
                                             </div>
+                                            <span className="text-xs font-bold text-slate-400 mt-2 uppercase">{day.day}</span>
                                         </div>
                                     ))}
                                 </div>
-                            </section>
+                            </div>
 
-                            <section className="bg-indigo-50 border border-indigo-100 rounded-xl p-6 relative overflow-hidden">
-                                <div className="absolute top-0 right-0 p-4 opacity-10">
-                                    <svg className="w-24 h-24 text-indigo-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+                            {/* Continue Learning */}
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                    <PlayCircle className="w-5 h-5 text-indigo-500" /> Continue Learning
+                                </h3>
+                                {recommendedCourses.length > 0 ? (
+                                    <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden hover:shadow-md transition-all flex flex-col sm:flex-row group cursor-pointer">
+                                        <div className="sm:w-2/5 relative h-48 sm:h-auto bg-slate-100">
+                                            <img src="/images/course-1.png" alt="Course" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                                        </div>
+                                        <div className="p-6 sm:w-3/5 flex flex-col justify-center">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-50 text-indigo-700">Web Development</span>
+                                            </div>
+                                            <h4 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">{recommendedCourses[0].title}</h4>
+                                            <p className="text-sm text-slate-500 mb-6 line-clamp-2">{recommendedCourses[0].description}</p>
+                                            
+                                            <div className="flex items-center justify-between mt-auto">
+                                                <div className="text-sm font-medium text-slate-600">
+                                                    Instructor: <span className="text-slate-900">{recommendedCourses[0].instructor?.name}</span>
+                                                </div>
+                                                <Link href={route('courses.show', recommendedCourses[0].id)} className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2 px-4 rounded-lg transition-colors text-sm">
+                                                    Resume
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <p className="text-slate-500">You have no active courses right now.</p>
+                                )}
+                            </div>
+
+                        </div>
+
+                        {/* Right Sidebar */}
+                        <div className="space-y-8">
+                            
+                            {/* Learning Calendar */}
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                                <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2 uppercase tracking-wider">
+                                    <CalendarDays className="w-4 h-4 text-indigo-500" /> Learning Calendar
+                                </h3>
+                                <div className="grid grid-cols-7 gap-2">
+                                    {['S','M','T','W','T','F','S'].map((d, i) => (
+                                        <div key={i} className="text-center text-xs font-bold text-slate-400">{d}</div>
+                                    ))}
+                                    {calendarDays.map((day, i) => (
+                                        <div 
+                                            key={i} 
+                                            className={`aspect-square rounded-md flex items-center justify-center text-xs font-medium cursor-pointer transition-colors ${
+                                                day.active ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'
+                                            }`}
+                                        >
+                                            {day.day}
+                                        </div>
+                                    ))}
                                 </div>
-                                <div className="relative z-10">
-                                    <h3 className="text-sm font-bold text-indigo-800 uppercase tracking-wider mb-2">Pro Access</h3>
-                                    <p className="text-indigo-900 font-medium mb-5">Upgrade to Pro to unlock 500+ interactive labs and live expert Q&A.</p>
-                                    <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2.5 px-4 rounded-lg transition-colors shadow-sm">
-                                        Upgrade Now
-                                    </button>
+                            </div>
+
+                            {/* Upcoming Deadlines */}
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                                <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2 uppercase tracking-wider">
+                                    <Clock className="w-4 h-4 text-orange-500" /> Upcoming Deadlines
+                                </h3>
+                                <div className="space-y-4">
+                                    <div className="flex gap-4 items-start p-3 rounded-xl bg-orange-50 border border-orange-100">
+                                        <div className="bg-orange-100 text-orange-600 rounded-lg p-2 flex flex-col items-center justify-center min-w-[50px]">
+                                            <span className="text-xs font-bold">OCT</span>
+                                            <span className="text-lg font-black">24</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-slate-900 text-sm">React Final Project</h4>
+                                            <p className="text-xs text-slate-500 mt-1">Submit your final code repository for grading.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4 items-start p-3 rounded-xl hover:bg-slate-50 transition-colors">
+                                        <div className="bg-slate-100 text-slate-600 rounded-lg p-2 flex flex-col items-center justify-center min-w-[50px]">
+                                            <span className="text-xs font-bold">OCT</span>
+                                            <span className="text-lg font-black">28</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-slate-900 text-sm">Python Quiz</h4>
+                                            <p className="text-xs text-slate-500 mt-1">Module 4 assessment.</p>
+                                        </div>
+                                    </div>
                                 </div>
-                            </section>
+                            </div>
+
+                            {/* Recent Certificates */}
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                                <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2 uppercase tracking-wider">
+                                    <Award className="w-4 h-4 text-yellow-500" /> Recent Certificates
+                                </h3>
+                                {recentCertificates.length > 0 ? (
+                                    <div className="space-y-3">
+                                        {recentCertificates.map(cert => (
+                                            <Link key={cert.id} href={route('certificates.show', cert.certificate_code)} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
+                                                <div className="w-10 h-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center shrink-0">
+                                                    <Award className="w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="text-sm font-bold text-slate-900 line-clamp-1">{cert.course.title}</h4>
+                                                    <p className="text-xs text-slate-500">Issued: {new Date(cert.issued_at).toLocaleDateString()}</p>
+                                                </div>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center p-6 bg-slate-50 rounded-xl border border-slate-100 border-dashed">
+                                        <Award className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                                        <p className="text-sm text-slate-500">No certificates yet. Keep learning!</p>
+                                    </div>
+                                )}
+                            </div>
+
                         </div>
                     </div>
 

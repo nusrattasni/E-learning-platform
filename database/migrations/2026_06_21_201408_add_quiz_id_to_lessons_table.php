@@ -15,7 +15,9 @@ return new class extends Migration
             $table->foreignId('quiz_id')->nullable()->constrained()->nullOnDelete();
         });
         
-        \Illuminate\Support\Facades\DB::statement("ALTER TABLE lessons MODIFY type ENUM('video', 'text', 'interactive_code', 'quiz') DEFAULT 'video'");
+        if (\Illuminate\Support\Facades\DB::getDriverName() !== 'sqlite') {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE lessons MODIFY type ENUM('video', 'text', 'interactive_code', 'quiz') DEFAULT 'video'");
+        }
     }
 
     /**
@@ -28,6 +30,8 @@ return new class extends Migration
             $table->dropColumn('quiz_id');
         });
         
-        \Illuminate\Support\Facades\DB::statement("ALTER TABLE lessons MODIFY type ENUM('video', 'text', 'interactive_code') DEFAULT 'video'");
+        if (\Illuminate\Support\Facades\DB::getDriverName() !== 'sqlite') {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE lessons MODIFY type ENUM('video', 'text', 'interactive_code') DEFAULT 'video'");
+        }
     }
 };

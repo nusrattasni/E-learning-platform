@@ -3,7 +3,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
-import { Home, BookOpen, Target, Award, Heart, Settings, Flame, Star, Trophy, Bell } from 'lucide-react';
+import { Home, BookOpen, Target, Award, Heart, Settings, Flame, Star, Trophy, Bell, Activity } from 'lucide-react';
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -14,6 +14,7 @@ export default function Authenticated({ user, header, children }) {
         { name: 'My Learning', icon: <Target className="w-5 h-5" />, route: 'my-courses', active: route().current('my-courses') },
         { name: 'Certificates', icon: <Award className="w-5 h-5" />, route: 'certificates', active: route().current('certificates') },
         { name: 'Wishlist', icon: <Heart className="w-5 h-5" />, route: 'wishlist', active: route().current('wishlist') },
+        { name: 'Activity Log', icon: <Activity className="w-5 h-5" />, route: 'activity-logs', active: route().current('activity-logs') },
         { name: 'Settings', icon: <Settings className="w-5 h-5" />, route: 'profile.edit', active: route().current('profile.edit') },
     ];
 
@@ -71,9 +72,13 @@ export default function Authenticated({ user, header, children }) {
                 {/* Bottom Profile Area in Sidebar */}
                 <div className="p-4 border-t border-gray-200">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
-                            {user?.name?.charAt(0) || 'U'}
-                        </div>
+                        {user?.avatar_path ? (
+                            <img src={`/storage/${user.avatar_path}`} alt={user?.name} className="w-9 h-9 rounded-full object-cover shadow-sm border border-gray-200" />
+                        ) : (
+                            <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold shadow-sm">
+                                {user?.name?.charAt(0) || 'U'}
+                            </div>
+                        )}
                         <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
                             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
@@ -146,6 +151,9 @@ export default function Authenticated({ user, header, children }) {
                                                     type="button"
                                                     className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-600 bg-white hover:bg-gray-50 hover:text-gray-900 focus:outline-none transition ease-in-out duration-150"
                                                 >
+                                                    {user?.avatar_path && (
+                                                        <img src={`/storage/${user.avatar_path}`} alt="Avatar" className="w-6 h-6 rounded-full object-cover mr-2" />
+                                                    )}
                                                     {user?.name}
                                                     <svg className="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                                         <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
