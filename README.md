@@ -1,66 +1,182 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎓 E-Learning Platform (Learning Management System)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern **Learning Management System (LMS)** built using **Laravel**, **React**, **Inertia.js**, and **MySQL**. This platform enables students to access courses, monitor their learning progress, and earn certificates, while administrators can efficiently manage courses, users, and educational content.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📌 Project Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This project was developed as part of my Software Development Internship at **Mystrix IT**. The goal was to create an interactive online learning platform similar to DataCamp or Udemy, where students can learn through structured courses and track their progress.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 👨‍🎓 Student Features
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+* User Registration & Login
+* Secure Authentication
+* Browse Available Courses
+* Enroll in Courses
+* Watch Course Lessons
+* Learning Progress Tracking
+* Dashboard Overview
+* Certificate Generation
+* Responsive User Interface
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 👨‍💼 Admin Features
 
-## Laravel Sponsors
+* Admin Dashboard
+* Course Management
+* Lesson Management
+* User Management
+* Certificate Management
+* Content Management
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🛠 Technology Stack
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Frontend
 
-## Contributing
+* React.js
+* Inertia.js
+* JavaScript
+* HTML5
+* CSS3
+* Tailwind CSS
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Backend
 
-## Code of Conduct
+* Laravel
+* PHP
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Database
 
-## Security Vulnerabilities
+* MySQL
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Development Tools
 
-## License
+* XAMPP
+* Composer
+* npm
+* Git
+* GitHub
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 📂 Project Structure
+
+```text
+app/
+bootstrap/
+config/
+database/
+public/
+resources/
+routes/
+storage/
+```
+
+---
+
+## 🚀 Installation
+
+### Clone the repository
+
+```bash
+git clone https://github.com/nusrattasni/E-learning-platform.git
+```
+
+### Go to project directory
+
+```bash
+cd E-learning-platform
+```
+
+### Install PHP dependencies
+
+```bash
+composer install
+```
+
+### Install JavaScript dependencies
+
+```bash
+npm install
+```
+
+### Copy environment file
+
+```bash
+cp .env.example .env
+```
+
+### Generate application key
+
+```bash
+php artisan key:generate
+```
+
+### Configure database
+
+Update your `.env` file with your MySQL database credentials.
+
+### Run database migrations
+
+```bash
+php artisan migrate
+```
+
+### Start Laravel server
+
+```bash
+php artisan serve
+```
+
+### Start Vite
+
+```bash
+npm run dev
+```
+
+---
+
+## 📸 Screenshots
+
+Add screenshots here.
+
+Example:
+
+* Home Page
+* Login Page
+* Dashboard
+* Course Learning Page
+* Certificate Page
+
+---
+
+## 📈 Future Improvements
+
+* Online Payment Integration
+* Quiz & Examination System
+* Live Classes
+* Student Discussion Forum
+* Email Notifications
+* Mobile Application
+* AI-powered Course Recommendation
+
+---
+
+## 👩‍💻 Developer
+
+**Nusrat Tasnim Juthi**
+
+* GitHub: https://github.com/nusrattasni
+
+---
+
+## 📄 License
+
+This project is for educational and portfolio purposes.
+
