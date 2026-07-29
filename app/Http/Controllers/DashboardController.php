@@ -66,9 +66,8 @@ class DashboardController extends Controller
         $leaderboardPosition = \App\Models\User::where('xp', '>', $user->xp)->count() + 1;
         
         $enrolledCourseIds = Enrollment::where('student_id', $user->id)->pluck('course_id');
-        $recommendedCourses = \App\Models\Course::with('instructor')
-            ->whereNotIn('id', $enrolledCourseIds)
-            ->inRandomOrder()
+        $activeCourses = \App\Models\Course::with('instructor')
+            ->whereIn('id', $enrolledCourseIds)
             ->take(3)
             ->get();
             
@@ -94,7 +93,7 @@ class DashboardController extends Controller
             'userBadges' => $user->badges,
             'allBadges' => $allBadges,
             'leaderboardPosition' => $leaderboardPosition,
-            'recommendedCourses' => $recommendedCourses,
+            'activeCourses' => $activeCourses,
             'recentCertificates' => $recentCertificates,
             'weeklyProgress' => $weeklyProgress,
         ]);

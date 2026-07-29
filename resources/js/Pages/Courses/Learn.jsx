@@ -217,12 +217,49 @@ export default function Learn({ course, currentLesson, completedLessonIds, enrol
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="p-12 text-center">
-                                            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                                                <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+                                        <div>
+                                            <div className="p-12 text-center">
+                                                <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                    <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+                                                </div>
+                                                <h2 className="text-2xl font-bold text-white mb-2">Quiz Passed!</h2>
+                                                <p className="text-slate-400 text-lg">{flash.success || 'You have successfully completed this quiz.'}</p>
                                             </div>
-                                            <h2 className="text-2xl font-bold text-white mb-2">Quiz Passed!</h2>
-                                            <p className="text-slate-400 text-lg">{flash.success || 'You have successfully completed this quiz.'}</p>
+                                            <div className="p-8 space-y-8 border-t border-slate-800">
+                                                <h3 className="text-xl font-bold text-white mb-2">Review Answers</h3>
+                                                {currentLesson.quiz.questions.map((q, qIndex) => (
+                                                    <div key={qIndex} className="space-y-4">
+                                                        <h3 className="text-lg font-bold text-white">
+                                                            <span className="text-indigo-400 mr-2">{qIndex + 1}.</span> {q.question}
+                                                        </h3>
+                                                        <div className="space-y-2 pl-6">
+                                                            {q.options.map((opt, optIndex) => {
+                                                                const result = flash.quiz_results ? flash.quiz_results[qIndex] : null;
+                                                                const isCorrectOption = (result && result.correct_option === optIndex) || (!result && parseInt(q.correct) === optIndex);
+                                                                const isWrongSelection = result && result.user_answer === optIndex && !result.correct;
+                                                                
+                                                                let labelClass = "flex items-center gap-3 p-4 rounded-xl border ";
+                                                                if (isCorrectOption) {
+                                                                    labelClass += "border-emerald-500 bg-emerald-500/10 text-emerald-400 font-bold";
+                                                                } else if (isWrongSelection) {
+                                                                    labelClass += "border-red-500 bg-red-500/10 text-red-400";
+                                                                } else {
+                                                                    labelClass += "border-slate-800 bg-slate-800/20 opacity-50";
+                                                                }
+
+                                                                return (
+                                                                    <label key={optIndex} className={labelClass}>
+                                                                        <input type="radio" disabled checked={isCorrectOption || isWrongSelection} className="w-5 h-5 opacity-50" />
+                                                                        <span>{opt}</span>
+                                                                        {isCorrectOption && <CheckCircle2 className="w-5 h-5 ml-auto text-emerald-500" />}
+                                                                        {isWrongSelection && <X className="w-5 h-5 ml-auto text-red-500" />}
+                                                                    </label>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
                                     )}
                                 </div>
